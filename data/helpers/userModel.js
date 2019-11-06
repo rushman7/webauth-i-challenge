@@ -2,10 +2,10 @@ const db = require('../dbConfig');
 
 module.exports = { getUsers, add }
 
-function getUsers(id) {
+function getUsers(username) {
   let query = db('users as u');
 
-  if (id) query.where('u.id', id).first();
+  if (username) query.where(username).first();
 
   return query.select('u.id', 'u.username', 'u.password');
 };

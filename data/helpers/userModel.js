@@ -1,6 +1,6 @@
 const db = require('../dbConfig');
 
-module.exports = { getUsers, insert }
+module.exports = { getUsers, add }
 
 function getUsers(id) {
   let query = db('users as u');
@@ -10,6 +10,6 @@ function getUsers(id) {
   return query.select('u.id', 'u.username', 'u.password');
 };
 
-function insert(project) {
-  return db('users').insert(project)
+function add(user) {
+  return db('users').insert(user)
 }

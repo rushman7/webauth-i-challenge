@@ -2,17 +2,17 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 
 const db = require('../data/helpers/userModel');
-const validate = require('../api/validate');
+const middleware = require('../api/middleware');
 
 const router = express.Router();
 
-router.get('/users', (req, res) => {
+router.get('/users', middleware.restricted, (req, res) => {
   db.getUsers()
     .then(users => res.status(200).json(users))
     .catch(err => res.status(500).json(err))
 })
 
-router.post('/register', validate.validateCredentialBody, (req, res) => {
+router.post('/register', middleware.validateCredentialBody, (req, res) => {
   const credentials = req.body;
 
   const hash = bcrypt.hashSync(credentials.password, 14);
@@ -24,12 +24,12 @@ router.post('/register', validate.validateCredentialBody, (req, res) => {
     .catch(err => res.status(500).json(err))
 })
 
-router.post('/login', validate.validateCredentialBody, (req, res) => {
+router.post('/login', middleware.validateCredentialBody, (req, res) => {
   const { username, password } = req.body;
 
   db.getUsers({ username })
     .then(user => {
-      if (user && bcrypt.compareSync(password, user.password)) res.status(201).json({ message: `Welcome ${user.username}!` })
+      if (user && bcrypt.compareSync(password, user.password)) res.status(201).json({ message: `Logged in, welcome ${user.username}!` })
       else res.status(401).json({ error: `Invalid credentials.` })
     })
     .catch(err => res.status(500).json(err))

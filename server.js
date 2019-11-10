@@ -6,10 +6,10 @@ const session = require('express-session');
 const userRouter = require('./routes/user-route');
 
 const sessionConfig = {
-  name: 'monkey', // sid
-  secret: 'keep it secret, keep it safe!',
+  name: 'userID', // sid
+  secret: 'useID credential data.',
   cookie: {
-    maxAge: 1000 * 30,
+    maxAge: 1000 * 60,
     secure: false, // true in production
     httpOnly: true,
   },

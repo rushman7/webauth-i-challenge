@@ -3,9 +3,6 @@ module.exports = {
   restricted 
 };
 
-const db = require('../data/helpers/userModel');
-const bcrypt = require('bcryptjs');
-
 function validateCredentialBody(req, res, next) {
   const { username, password } = req.body;
 
@@ -15,14 +12,6 @@ function validateCredentialBody(req, res, next) {
 }
 
 function restricted(req, res, next) {
-  const { username, password } = req.headers;
-
-  if (username && password) {
-    db.getUsers({ username })
-      .then(user => {
-        if (user && bcrypt.compareSync(password, user.password)) next();
-        else res.status(401).json({ error: `Invalid credentials.` })
-      })
-      .catch(err => res.status(500).json(err))
-  } else res.status(401).json({ message: 'Please provide valid credentials.' })
+  if (req.session && req.session.user) next();
+  else res.status(401).json({ message: 'Please provide valid credentials.' })
 }
